@@ -38,10 +38,10 @@ resource "azurerm_virtual_wan" "vwan1" {
   resource_group_name = azurerm_resource_group.RG.name
   location            = azurerm_resource_group.RG.location
     timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -53,10 +53,10 @@ resource "azurerm_virtual_hub" "vhub1" {
   virtual_wan_id      = azurerm_virtual_wan.vwan1.id
   address_prefix      = "10.0.0.0/16"
     timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -124,10 +124,10 @@ resource "azurerm_virtual_network" "spoke1-vnet" {
     name                 = "GatewaySubnet" 
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -146,10 +146,10 @@ resource "azurerm_virtual_network" "spoke2-vnet" {
     name                 = "GatewaySubnet" 
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -169,10 +169,10 @@ resource "azurerm_virtual_network" "onprem-vnet" {
     name                 = "GatewaySubnet" 
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -197,10 +197,10 @@ resource "azurerm_network_security_group" "spokevnetNSG" {
   name                = "spoke-vnet-default-nsg"
   resource_group_name = azurerm_resource_group.RG.name
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -217,10 +217,10 @@ resource "azurerm_network_security_rule" "spokevnetnsgrule1" {
   source_address_prefix       = var.C-home_public_ip
   source_port_range           = "*"
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -231,10 +231,10 @@ resource "azurerm_firewall_policy" "azfwpolicy" {
   resource_group_name = azurerm_resource_group.RG.name
   location            = azurerm_resource_group.RG.location
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
 }
 resource "azurerm_firewall_policy_rule_collection_group" "azfwpolicyrcg" {
@@ -254,10 +254,10 @@ network_rule_collection {
     }
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
 }
 resource "azurerm_firewall" "azfw" {
@@ -273,10 +273,10 @@ resource "azurerm_firewall" "azfw" {
   }
  
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -288,10 +288,10 @@ resource "azurerm_public_ip" "spoke1vm-pip" {
   resource_group_name = azurerm_resource_group.RG.name
   allocation_method = "Dynamic"
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -301,10 +301,10 @@ resource "azurerm_public_ip" "spoke2vm-pip" {
   resource_group_name = azurerm_resource_group.RG.name
   allocation_method = "Dynamic"
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -315,10 +315,10 @@ resource "azurerm_public_ip" "onpremvpngw-pip" {
   allocation_method = "Static"
   sku = "Standard"
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -328,10 +328,10 @@ resource "azurerm_public_ip" "onpremvm-pip" {
   resource_group_name = azurerm_resource_group.RG.name
   allocation_method = "Dynamic"
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -355,10 +355,10 @@ resource "azurerm_virtual_network_gateway" "onpremvpngw" {
     
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -375,10 +375,10 @@ resource "azurerm_local_network_gateway" "vwanlng" {
     bgp_peering_address = data.azurerm_vpn_gateway.hubpip.bgp_settings[0].instance_0_bgp_peering_address[0].default_ips[0]
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -394,10 +394,10 @@ resource "azurerm_virtual_network_gateway_connection" "to-azure" {
   virtual_network_gateway_id = azurerm_virtual_network_gateway.onpremvpngw.id
   enable_bgp = true
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -417,40 +417,40 @@ resource "azurerm_route_table" "RT" {
   }
   
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
 }
 resource "azurerm_subnet_route_table_association" "onspoke1defaultsubnet" {
   subnet_id      = azurerm_virtual_network.spoke1-vnet.subnet.*.id[0]
   route_table_id = azurerm_route_table.RT.id
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
 }
 resource "azurerm_subnet_route_table_association" "onspoke2defaultsubnet" {
   subnet_id      = azurerm_virtual_network.spoke2-vnet.subnet.*.id[0]
   route_table_id = azurerm_route_table.RT.id
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
 }
 resource "azurerm_subnet_route_table_association" "ononpremdefaultsubnet" {
   subnet_id      = azurerm_virtual_network.onprem-vnet.subnet.*.id[0]
   route_table_id = azurerm_route_table.RT.id
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
 }
 
@@ -466,10 +466,10 @@ resource "azurerm_network_interface" "spoke1vm-nic" {
     subnet_id                     = azurerm_virtual_network.spoke1-vnet.subnet.*.id[0]
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -484,10 +484,10 @@ resource "azurerm_network_interface" "spoke2vm-nic" {
     subnet_id                     = azurerm_virtual_network.spoke2-vnet.subnet.*.id[0]
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -502,10 +502,10 @@ resource "azurerm_network_interface" "onpremvm-nic" {
     subnet_id                     = azurerm_virtual_network.onprem-vnet.subnet.*.id[0]
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -533,10 +533,10 @@ resource "azurerm_windows_virtual_machine" "spoke1vm" {
     version   = "latest"
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -553,10 +553,10 @@ resource "azurerm_virtual_machine_extension" "killspoke1vmfirewall" {
     }
   SETTINGS
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -582,10 +582,10 @@ resource "azurerm_windows_virtual_machine" "spoke2vm" {
     version   = "latest"
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -602,10 +602,10 @@ resource "azurerm_virtual_machine_extension" "killspoke2vmfirewall" {
     }
   SETTINGS
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -631,10 +631,10 @@ resource "azurerm_windows_virtual_machine" "onpremvm" {
     version   = "latest"
   }
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
@@ -651,10 +651,10 @@ resource "azurerm_virtual_machine_extension" "killonpremvmfirewall" {
     }
   SETTINGS
   timeouts {
-    create = "1h"
-    read = "1h"
-    update = "1h"
-    delete = "1h"
+    create = "2h"
+    read = "2h"
+    update = "2h"
+    delete = "2h"
   }
   
 }
