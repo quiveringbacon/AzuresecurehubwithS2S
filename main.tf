@@ -72,11 +72,6 @@ data "azurerm_vpn_gateway" "hubpip" {
   resource_group_name = azurerm_resource_group.RG.name
   
 }
-/*
-output "azurerm_vpn_gateway_id" {
-  value = data.azurerm_vpn_gateway.hubpip.bgp_settings[0].instance_0_bgp_peering_address[0].tunnel_ips[0]
-}
-*/
 resource "azurerm_vpn_site" "onprem" {
   device_vendor       = "Azure"
   location            = azurerm_resource_group.RG.location
