@@ -4,7 +4,7 @@ This creates a vwan securehub and a couple of spoke vnets with VM's connected to
 
 You'll need to go to the hub security configuration through firewall manager to change the settings for internet and/or private traffic to go through the firewall.
 
-![wvanlabwithS2SandFW](https://user-images.githubusercontent.com/128983862/231878701-f59297f9-c635-4a0e-8e40-1c359fcde1fd.png)
+![wvanlabwithS2SandFW](https://user-images.githubusercontent.com/128983862/232787181-3aec5303-6e0a-4b0a-8390-0e08257d0eb8.png)
 
 You can run Terraform right from the Azure cloud shell by cloning this git repository with "git clone https://github.com/quiveringbacon/AzuresecurehubwithS2S.git ./terraform".
 
