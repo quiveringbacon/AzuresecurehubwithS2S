@@ -32,6 +32,152 @@ resource "azurerm_resource_group" "RG" {
   name     = var.B-resource_group_name
 }
 
+#logic app to self destruct resourcegroup after 24hrs
+data "azurerm_subscription" "sub" {
+}
+
+resource "azurerm_logic_app_workflow" "workflow1" {
+  location = azurerm_resource_group.RG.location
+  name     = "labdelete"
+  resource_group_name = azurerm_resource_group.RG.name
+  identity {
+    type = "SystemAssigned"
+  }
+  depends_on = [
+    azurerm_resource_group.RG,
+  ]
+}
+resource "azurerm_role_assignment" "contrib1" {
+  scope = azurerm_resource_group.RG.id
+  role_definition_name = "Contributor"
+  principal_id  = azurerm_logic_app_workflow.workflow1.identity[0].principal_id
+  depends_on = [azurerm_logic_app_workflow.workflow1]
+}
+
+resource "azurerm_resource_group_template_deployment" "apiconnections" {
+  name                = "group-deploy"
+  resource_group_name = azurerm_resource_group.RG.name
+  deployment_mode     = "Incremental"
+  template_content = <<TEMPLATE
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "arm-1",
+            "location": "${azurerm_resource_group.RG.location}",
+            "kind": "V1",
+            "properties": {
+                "displayName": "labdeleteconn1",
+                "authenticatedUser": {},
+                "statuses": [
+                    {
+                        "status": "Ready"
+                    }
+                ],
+                "connectionState": "Enabled",
+                "customParameterValues": {},
+                "alternativeParameterValues": {},
+                "parameterValueType": "Alternative",
+                "createdTime": "2023-05-21T23:07:20.1346918Z",
+                "changedTime": "2023-05-21T23:07:20.1346918Z",
+                "api": {
+                    "name": "arm",
+                    "displayName": "Azure Resource Manager",
+                    "description": "Azure Resource Manager exposes the APIs to manage all of your Azure resources.",
+                    "iconUri": "https://connectoricons-prod.azureedge.net/laborbol/fixes/path-traversal/1.0.1552.2695/arm/icon.png",
+                    "brandColor": "#003056",
+                    "id": "/subscriptions/${data.azurerm_subscription.sub.subscription_id}/providers/Microsoft.Web/locations/${azurerm_resource_group.RG.location}/managedApis/arm",
+                    "type": "Microsoft.Web/locations/managedApis"
+                },
+                "testLinks": []
+            }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "labdelete",
+            "location": "${azurerm_resource_group.RG.location}",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', 'arm-1')]"
+            ],
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 3,
+                                "startTime": "${timeadd(timestamp(),"24h")}"
+                            },
+                            "evaluatedRecurrence": {
+                                "frequency": "Minute",
+                                "interval": 3,
+                                "startTime": "${timeadd(timestamp(),"24h")}"
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "Delete_a_resource_group": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['arm']['connectionId']"
+                                    }
+                                },
+                                "method": "delete",
+                                "path": "/subscriptions/@{encodeURIComponent('${data.azurerm_subscription.sub.subscription_id}')}/resourcegroups/@{encodeURIComponent('${azurerm_resource_group.RG.name}')}",
+                                "queries": {
+                                    "x-ms-api-version": "2016-06-01"
+                                }
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "arm": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', 'arm-1')]",
+                                "connectionName": "arm-1",
+                                "connectionProperties": {
+                                    "authentication": {
+                                        "type": "ManagedServiceIdentity"
+                                    }
+                                },
+                                "id": "/subscriptions/${data.azurerm_subscription.sub.subscription_id}/providers/Microsoft.Web/locations/${azurerm_resource_group.RG.location}/managedApis/arm"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+TEMPLATE
+}
+
+
 #vwan and hub
 resource "azurerm_virtual_wan" "vwan1" {
   name                = "vwan1"
@@ -72,6 +218,7 @@ data "azurerm_vpn_gateway" "hubpip" {
   resource_group_name = azurerm_resource_group.RG.name
   
 }
+
 resource "azurerm_vpn_site" "onprem" {
   device_vendor       = "Azure"
   location            = azurerm_resource_group.RG.location
@@ -225,7 +372,6 @@ resource "azurerm_firewall_policy" "azfwpolicy" {
   name                = "azfw-policy"
   resource_group_name = azurerm_resource_group.RG.name
   location            = azurerm_resource_group.RG.location
-  sku = "Premium"
   timeouts {
     create = "2h"
     read = "2h"
@@ -525,7 +671,7 @@ resource "azurerm_windows_virtual_machine" "spoke1vm" {
   source_image_reference {
     offer     = "WindowsServer"
     publisher = "MicrosoftWindowsServer"
-    sku       = "2022-datacenter-azure-edition"
+    sku       = "2016-datacenter-gensecond"
     version   = "latest"
   }
   timeouts {
@@ -574,7 +720,7 @@ resource "azurerm_windows_virtual_machine" "spoke2vm" {
   source_image_reference {
     offer     = "WindowsServer"
     publisher = "MicrosoftWindowsServer"
-    sku       = "2022-datacenter-azure-edition"
+    sku       = "2016-datacenter-gensecond"
     version   = "latest"
   }
   timeouts {
@@ -623,7 +769,7 @@ resource "azurerm_windows_virtual_machine" "onpremvm" {
   source_image_reference {
     offer     = "WindowsServer"
     publisher = "MicrosoftWindowsServer"
-    sku       = "2022-datacenter-azure-edition"
+    sku       = "2016-datacenter-gensecond"
     version   = "latest"
   }
   timeouts {
