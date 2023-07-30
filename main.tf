@@ -716,7 +716,7 @@ resource "azurerm_windows_virtual_machine" "spoke1vm" {
   source_image_reference {
     offer     = "WindowsServer"
     publisher = "MicrosoftWindowsServer"
-    sku       = "2016-datacenter-gensecond"
+    sku       = "2022-datacenter-azure-edition"
     version   = "latest"
   }
   timeouts {
@@ -765,7 +765,7 @@ resource "azurerm_windows_virtual_machine" "spoke2vm" {
   source_image_reference {
     offer     = "WindowsServer"
     publisher = "MicrosoftWindowsServer"
-    sku       = "2016-datacenter-gensecond"
+    sku       = "2022-datacenter-azure-edition"
     version   = "latest"
   }
   timeouts {
@@ -814,7 +814,7 @@ resource "azurerm_windows_virtual_machine" "onpremvm" {
   source_image_reference {
     offer     = "WindowsServer"
     publisher = "MicrosoftWindowsServer"
-    sku       = "2016-datacenter-gensecond"
+    sku       = "2022-datacenter-azure-edition"
     version   = "latest"
   }
   timeouts {
