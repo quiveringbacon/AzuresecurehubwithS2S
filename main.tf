@@ -467,6 +467,22 @@ resource "azurerm_monitor_diagnostic_setting" "fwlogs"{
   }
 }
 
+#add route to default table
+data "azurerm_virtual_hub_route_table" "hubdefaultrt" {
+  name                = "defaultRouteTable"
+  resource_group_name = azurerm_resource_group.RG.name
+  virtual_hub_name    = azurerm_virtual_hub.vhub1.name
+}
+resource "azurerm_virtual_hub_route_table_route" "route1" {
+  route_table_id = data.azurerm_virtual_hub_route_table.hubdefaultrt.id
+
+  name              = "toFW"
+  destinations_type = "CIDR"
+  destinations      = ["0.0.0.0/0"]
+  next_hop_type     = "ResourceId"
+  next_hop          = azurerm_firewall.azfw.id
+}
+
 
 #Public ip's
 resource "azurerm_public_ip" "spoke1vm-pip" {
